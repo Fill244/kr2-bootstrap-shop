@@ -13,9 +13,7 @@ if (footer) {
           <h2>НАВИГАЦИЯ</h2>
           <a href="index.html">Главная</a>
           <a href="catalog.html">Игровые зоны</a>
-          <a href="prices.html">Тарифы и отзывы</a>
-          <a href="order.html">Бронирование</a>
-          <a href="contacts.html">Контакты и FAQ</a>
+          <a href="prices.html">Услуги</a>
         </nav>
         <div class="footer-column footer-contacts">
           <h2>КОНТАКТЫ</h2>
@@ -23,10 +21,13 @@ if (footer) {
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
             <span>Москва, ул. Тверская, 12</span>
           </a>
-          <a href="tel:+74951234567">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.8 2.1Z"/></svg>
-            <span>+7 (495) 123-45-67</span>
-          </a>
+          <div class="footer-phone">
+            <a href="tel:+74951234567">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.8 2.1Z"/></svg>
+              <span>+7 (495) 123-45-67</span>
+            </a>
+            <span class="footer-hours">Отвечаем круглосуточно</span>
+          </div>
           <a href="mailto:hello@cyberzone.ru">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
             <span>hello@cyberzone.ru</span>

@@ -295,7 +295,8 @@ a {
   display: block;
   margin-bottom: 1.5rem;
   color: var(--lime);
-  font-size: 1.5rem;
+  font-size: 2.1rem;
+  line-height: 1;
 }
 
 .info-card h3 {
@@ -339,6 +340,10 @@ a {
 
 .photo-three {
   background-image: url("https://images.unsplash.com/photo-1603481546238-487240415921?auto=format&fit=crop&w=1100&q=80");
+}
+
+.photo-console {
+  background-image: url("https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=1100&q=80");
 }
 
 .cta-band {
@@ -869,10 +874,42 @@ a {
   color: var(--lime);
 }
 
+.site-footer .brand-mark {
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1.2rem;
+}
+
+.footer-phone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.footer-phone > a {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  color: #b6bdc5;
+  font-size: 0.82rem;
+  text-decoration: none;
+}
+
+.footer-phone > a:hover {
+  color: var(--lime);
+}
+
+.footer-hours {
+  color: var(--lime);
+  font-size: 0.72rem;
+  text-align: right;
+}
+
 .footer-contacts svg {
-  flex: 0 0 17px;
-  width: 17px;
-  height: 17px;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
   margin-top: 0.1rem;
   fill: none;
   stroke: var(--lime);
@@ -891,8 +928,8 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border: 1px solid var(--line);
 }
 
@@ -901,8 +938,8 @@ a {
 }
 
 .footer-socials svg {
-  width: 17px;
-  height: 17px;
+  width: 21px;
+  height: 21px;
   margin: 0;
   stroke: var(--text);
 }
@@ -930,19 +967,18 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
-  border: 1px solid var(--lime);
-  background: var(--lime);
-  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4);
-  color: var(--page);
+  width: 54px;
+  height: 54px;
+  border: 0;
+  padding: 0;
+  background: transparent;
   opacity: 0;
   pointer-events: none;
   transform: translateY(10px);
   transition:
     opacity 0.2s,
     transform 0.2s,
-    background 0.2s;
+    filter 0.2s;
 }
 
 .back-to-top.is-visible {
@@ -952,17 +988,13 @@ a {
 }
 
 .back-to-top:hover {
-  background: #e2ff87;
+  filter: brightness(1.15);
 }
 
-.back-to-top svg {
-  width: 21px;
-  height: 21px;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
+.back-to-top img {
+  display: block;
+  width: 34px;
+  height: 34px;
 }
 
 /* Mobile layout */

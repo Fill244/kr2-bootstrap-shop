@@ -44,6 +44,76 @@ if (footer) {
     </div>`;
 }
 
+const supportWidget = document.createElement("div");
+supportWidget.className = "support-widget";
+supportWidget.innerHTML = `
+  <section class="support-panel" aria-label="Чат поддержки" aria-hidden="true" inert>
+    <header class="support-header">
+      <div><strong>Поддержка CyberZone</strong><span>На связи круглосуточно</span></div>
+      <button class="support-close" type="button" aria-label="Закрыть чат">×</button>
+    </header>
+    <div class="support-log" role="log" aria-live="polite">
+      <p class="support-message support-message-agent">Привет! Выбери вопрос — подскажу.</p>
+    </div>
+    <div class="support-questions">
+      <button type="button" data-question="booking">Как забронировать место?</button>
+      <button type="button" data-question="prices">Сколько стоит игра?</button>
+      <button type="button" data-question="address">Где находится клуб?</button>
+    </div>
+  </section>
+  <button class="support-toggle" type="button" aria-expanded="false" aria-label="Открыть чат поддержки">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5 8 8 0 0 1-3.5-.8L4 20l1.2-4A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></svg>
+    <span>Поддержка</span>
+  </button>`;
+document.body.append(supportWidget);
+
+const supportToggle = supportWidget.querySelector(".support-toggle");
+const supportPanel = supportWidget.querySelector(".support-panel");
+const supportLog = supportWidget.querySelector(".support-log");
+const supportAnswers = {
+  booking: "Выбери игровую зону, дату и время в форме бронирования. После отправки заявки администратор позвонит для подтверждения.",
+  prices: "Стоимость зависит от игровой зоны и длительности игры. Тарифы и пакетные предложения собраны на странице услуг.",
+  address: "Мы находимся в Москве по адресу: ул. Тверская, 12. Клуб открыт круглосуточно."
+};
+
+const closeSupport = () => {
+  supportPanel.classList.remove("is-open");
+  supportPanel.setAttribute("aria-hidden", "true");
+  supportPanel.inert = true;
+  supportToggle.setAttribute("aria-expanded", "false");
+  supportToggle.setAttribute("aria-label", "Открыть чат поддержки");
+};
+
+supportToggle.addEventListener("click", () => {
+  const isOpen = supportPanel.classList.contains("is-open");
+  if (isOpen) {
+    closeSupport();
+    return;
+  }
+
+  supportPanel.inert = false;
+  supportPanel.setAttribute("aria-hidden", "false");
+  supportPanel.classList.add("is-open");
+  supportToggle.setAttribute("aria-expanded", "true");
+  supportToggle.setAttribute("aria-label", "Закрыть чат поддержки");
+});
+supportWidget.querySelector(".support-close").addEventListener("click", closeSupport);
+supportWidget.querySelectorAll("[data-question]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const question = button.textContent;
+    const userMessage = document.createElement("p");
+    userMessage.className = "support-message support-message-user";
+    userMessage.textContent = question;
+    supportLog.append(userMessage);
+
+    const answer = document.createElement("p");
+    answer.className = "support-message support-message-agent";
+    answer.textContent = supportAnswers[button.dataset.question];
+    supportLog.append(answer);
+    supportLog.scrollTop = supportLog.scrollHeight;
+  });
+});
+
 const backToTop = document.querySelector(".back-to-top");
 
 if (backToTop) {
@@ -61,6 +131,32 @@ if (backToTop) {
 if (bookingForm) {
   const visitTime = bookingForm.querySelector("#visitTime");
   const bookingMessage = document.querySelector("#bookingMessage");
+  const zone = bookingForm.querySelector("#zone");
+  const seats = bookingForm.querySelector("#seats");
+  const duration = bookingForm.querySelector("#bookingHours");
+  const estimate = bookingForm.querySelector("#bookingEstimate");
+  const breakdown = bookingForm.querySelector("#bookingBreakdown");
+
+  const updateBookingEstimate = () => {
+    const option = zone.selectedOptions[0];
+    const hours = Number(duration.value);
+    const rate = Number(option.dataset.rate);
+    const isRoomRate = option.dataset.unit === "room";
+    const seatCount = isRoomRate ? 1 : Number(seats.value);
+
+    if (!rate || !Number.isInteger(hours) || hours < 1 || hours > 24) {
+      estimate.textContent = "—";
+      breakdown.textContent = "Выбери игровую зону и длительность от 1 до 24 часов.";
+      return;
+    }
+
+    const total = rate * hours * seatCount;
+    estimate.textContent = `${new Intl.NumberFormat("ru-RU").format(total)} ₽`;
+    const seatUnit = seatCount === 1 ? "место" : seatCount < 5 ? "места" : "мест";
+    breakdown.textContent = isRoomRate
+      ? `${new Intl.NumberFormat("ru-RU").format(rate)} ₽/ч за комнату × ${hours} ч`
+      : `${new Intl.NumberFormat("ru-RU").format(rate)} ₽/ч × ${hours} ч × ${seatCount} ${seatUnit}`;
+  };
 
   const updateMinimumVisitTime = () => {
     const now = new Date();
@@ -69,6 +165,20 @@ if (bookingForm) {
   };
 
   updateMinimumVisitTime();
+  updateBookingEstimate();
+
+  zone.addEventListener("change", updateBookingEstimate);
+  seats.addEventListener("change", updateBookingEstimate);
+  duration.addEventListener("input", updateBookingEstimate);
+  bookingForm.querySelectorAll("[data-hours-change]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const step = Number(button.dataset.hoursChange);
+      const currentHours = Number(duration.value) || Number(duration.min);
+      const nextHours = Math.min(Number(duration.max), Math.max(Number(duration.min), currentHours + step));
+      duration.value = String(nextHours);
+      updateBookingEstimate();
+    });
+  });
 
   bookingForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -82,11 +192,14 @@ if (bookingForm) {
 
     const formData = new FormData(bookingForm);
     const guestName = formData.get("name");
-    bookingMessage.textContent = `Спасибо, ${guestName}! Заявка подготовлена. Для подтверждения бронирования позвони нам по телефону +7 (495) 123-45-67.`;
+    const selectedZone = formData.get("zone");
+    const selectedHours = formData.get("duration");
+    bookingMessage.textContent = `Спасибо, ${guestName}! Заявка подготовлена: ${selectedZone}, ${selectedHours} ч. Предварительная стоимость — ${estimate.textContent}. Для подтверждения бронирования позвони нам по телефону +7 (495) 123-45-67.`;
     bookingMessage.classList.remove("d-none");
     bookingForm.reset();
     bookingForm.classList.remove("was-validated");
     updateMinimumVisitTime();
+    updateBookingEstimate();
     bookingMessage.focus();
   });
 }
